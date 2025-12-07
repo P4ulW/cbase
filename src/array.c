@@ -1,5 +1,6 @@
 #ifndef ARRAY
 #define ARRAY
+#include "arena.c"
 #include <stdint.h>
 typedef uint32_t U32;
 
@@ -24,7 +25,7 @@ typedef uint32_t U32;
   }                                                                            \
                                                                                \
   Array##type Array##type##_with_capacity(Arena *arena, const U32 capacity) {  \
-    type *memory = (type *)arena_alloc(arena, sizeof(type) * capacity);        \
+    type *memory = (type *)Arena_alloc(arena, sizeof(type) * capacity);        \
     Array##type Self = {.len = 0, .cap = capacity, .items = memory};           \
     return Self;                                                               \
   }                                                                            \

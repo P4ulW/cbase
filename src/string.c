@@ -1,15 +1,16 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "array.c"
 #include "types.h"
-#include <stdio.h>
 
 typedef struct {
-  char *items;
+  char* items;
   U32 len;
   U32 cap;
 } String;
 
 typedef struct {
-  char *items;
+  char* items;
   U32 len;
 } StringSlice;
 
@@ -21,7 +22,7 @@ Array_Impl(StringSlice);
 
 // ------------------------------------------------------ //
 char String_get(const String self, U32 index) {
-  if (index > 0 || index <= self.len) {
+  if (index < 0 || index >= self.len) {
     fprintf(stderr,
             "Could not get char in String at index %d due to out of bounds\n",
             index);
@@ -49,14 +50,32 @@ void String_push(String self, char value) {
 }
 
 // ------------------------------------------------------ //
-String String_from_cstring(char *buf) {
+String String_from_cstring(char* buf) {
   String str = {.items = buf, .len = 0, .cap = 0};
-  char current = buf[0];
+  U32 index = 0;
+  char current = buf[index];
   while (current) {
     str.len += 1;
     str.cap += 1;
+    index += 1;
+    current = buf[index];
   }
   return str;
+}
+
+// ------------------------------------------------------ //
+static void String_print(String str) {
+  printf("String <\x1b[33m");
+  for (int i = 0; i < str.len; i++) {
+    char current = str.items[i];
+    if (current == '\n') {
+      printf("\\n");
+      continue;
+    }
+    printf("%c", current);
+  }
+  printf("\x1b[0m> len:%u, cap:%u\n", str.len, str.cap);
+  return;
 }
 
 // ------------------------------------------------------ //
@@ -75,7 +94,7 @@ B32 String_equal(const String self, const String needle) {
 }
 
 // ------------------------------------------------------ //
-static void StringSlice_split_to_slices(ArrayStringSlice *slices,
+static void StringSlice_split_to_slices(ArrayStringSlice* slices,
                                         StringSlice to_split,
                                         const char split_char) {
   U32 len = 0;
@@ -114,12 +133,16 @@ static void StringSlice_split_to_slices(ArrayStringSlice *slices,
 
 // ------------------------------------------------------ //
 static void StringSlice_print(StringSlice str) {
-  printf("str: len %d content: ", str.len);
+  printf("StringSlice <\x1b[33m");
   for (int i = 0; i < str.len; i++) {
     char current = str.items[i];
+    if (current == '\n') {
+      printf("\\n");
+      continue;
+    }
     printf("%c", current);
   }
-  printf("\n");
+  printf("\x1b[0m> len:%u\n", str.len);
   return;
 }
 
@@ -128,6 +151,17 @@ static void StringSlice_print(StringSlice str) {
 int main() {
   char test[] = "this is a test!\nWe test here\nwhatever we\nwant to!\n";
   String string = String_from_cstring(test);
+  String_print(string);
+  StringSlice slice = {.items = string.items, .len = string.len};
+  StringSlice_print(slice);
+  ArrayStringSlice lines = {
+      .len = 0, .cap = 10, .items = malloc(sizeof(ArrayStringSlice) * 10)};
+  StringSlice_split_to_slices(&lines, slice, '\n');
+  for (U32 i = 0; i < lines.len; i++) {
+    StringSlice line = ArrayStringSlice_get_value(&lines, i);
+    StringSlice_print(line);
+  }
+
   return 0;
 }
 
