@@ -21,7 +21,7 @@ Array_Impl(String);
 Array_Impl(StringSlice);
 
 // ------------------------------------------------------ //
-char String_get(const String self, U32 index) {
+char String_get(const String self, const U32 index) {
   if (index < 0 || index >= self.len) {
     fprintf(stderr,
             "Could not get char in String at index %d due to out of bounds\n",
@@ -34,18 +34,18 @@ char String_get(const String self, U32 index) {
 }
 
 // ------------------------------------------------------ //
-void String_push(String self, char value) {
-  if (self.len >= self.cap) {
+void String_push(String* self, const char value) {
+  if (self->len >= self->cap) {
     fprintf(
         stderr,
         "Could not push to string, there is no space in string with cap %d\n",
-        self.cap);
+        self->cap);
     fflush(stderr);
     return;
   }
 
-  self.items[self.len] = value;
-  self.len += 1;
+  self->items[self->len] = value;
+  self->len += 1;
   return;
 }
 
@@ -64,7 +64,7 @@ String String_from_cstring(char* buf) {
 }
 
 // ------------------------------------------------------ //
-static void String_print(String str) {
+static void String_print(const String str) {
   printf("String <\x1b[33m");
   for (int i = 0; i < str.len; i++) {
     char current = str.items[i];
@@ -95,7 +95,7 @@ B32 String_equal(const String self, const String needle) {
 
 // ------------------------------------------------------ //
 static void StringSlice_split_to_slices(ArrayStringSlice* slices,
-                                        StringSlice to_split,
+                                        const StringSlice to_split,
                                         const char split_char) {
   U32 len = 0;
   StringSlice slice = {0};
@@ -132,7 +132,7 @@ static void StringSlice_split_to_slices(ArrayStringSlice* slices,
 }
 
 // ------------------------------------------------------ //
-static void StringSlice_print(StringSlice str) {
+static void StringSlice_print(const StringSlice str) {
   printf("StringSlice <\x1b[33m");
   for (int i = 0; i < str.len; i++) {
     char current = str.items[i];
@@ -146,7 +146,6 @@ static void StringSlice_print(StringSlice str) {
   return;
 }
 
-#define TEST_STRING
 #ifdef TEST_STRING
 int main() {
   char test[] = "this is a test!\nWe test here\nwhatever we\nwant to!\n";
