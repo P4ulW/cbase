@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "arena.c"
 #include "array.c"
 #include "types.h"
 
@@ -31,6 +32,16 @@ char String_get(const String self, const U32 index) {
   }
 
   return self.items[index];
+}
+
+// ------------------------------------------------------ //
+String String_with_capacity(Arena* arena, U32 capacity) {
+  String string = {0};
+  char* mem = Arena_alloc(arena, capacity);
+  string.items = mem;
+  string.cap = capacity;
+  string.len = 0;
+  return string;
 }
 
 // ------------------------------------------------------ //
