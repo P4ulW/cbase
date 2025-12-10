@@ -5,5 +5,5 @@ test_string:
 
 test_array:
 	mkdir -pv tests
-	gcc ./tests/test_array.c -Og -g -o ./tests/array
+	gcc ./src/array.c -Og -g -o ./tests/array -DARRAY_TEST
 	./tests/array
