@@ -1,17 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef STRING_C
+#define STRING_C
+
 #include "arena.c"
 #include "array.c"
 #include "types.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef struct {
-  char* items;
+  char *items;
   U32 len;
   U32 cap;
 } String;
 
 typedef struct {
-  char* items;
+  char *items;
   U32 len;
 } StringSlice;
 
@@ -35,9 +38,9 @@ char String_get(const String self, const U32 index) {
 }
 
 // ------------------------------------------------------ //
-String String_with_capacity(Arena* arena, U32 capacity) {
+String String_with_capacity(Arena *arena, U32 capacity) {
   String string = {0};
-  char* mem = Arena_alloc(arena, capacity);
+  char *mem = Arena_alloc(arena, capacity);
   string.items = mem;
   string.cap = capacity;
   string.len = 0;
@@ -45,7 +48,7 @@ String String_with_capacity(Arena* arena, U32 capacity) {
 }
 
 // ------------------------------------------------------ //
-void String_push(String* self, const char value) {
+void String_push(String *self, const char value) {
   if (self->len >= self->cap) {
     fprintf(
         stderr,
@@ -61,7 +64,7 @@ void String_push(String* self, const char value) {
 }
 
 // ------------------------------------------------------ //
-String String_from_cstring(char* buf) {
+String String_from_cstring(char *buf) {
   String str = {.items = buf, .len = 0, .cap = 0};
   U32 index = 0;
   char current = buf[index];
@@ -105,7 +108,7 @@ B32 String_equal(const String self, const String needle) {
 }
 
 // ------------------------------------------------------ //
-static void StringSlice_split_to_slices(ArrayStringSlice* slices,
+static void StringSlice_split_to_slices(ArrayStringSlice *slices,
                                         const StringSlice to_split,
                                         const char split_char) {
   U32 len = 0;
@@ -156,6 +159,8 @@ static void StringSlice_print(const StringSlice str) {
   printf("\x1b[0m> len:%u\n", str.len);
   return;
 }
+
+#endif /* ifndef STRING_C */
 
 #ifdef TEST_STRING
 int main() {
