@@ -89,8 +89,8 @@ typedef uint32_t U32;
   type Array##type##_pop(Array##type *self) {                                  \
     type out = {0};                                                            \
     if (!self->len) {                                                          \
-      fprintf(stderr,                                                          \
-              "trying to remove from empty array! Array type: %s" #type);      \
+      fprintf(stderr, "trying to remove from empty array! Array type: %s",     \
+              #type);                                                          \
       return out;                                                              \
     }                                                                          \
                                                                                \
