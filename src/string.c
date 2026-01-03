@@ -5,7 +5,6 @@
 #include "array.c"
 #include "types.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 typedef struct {
   char *items;
@@ -50,10 +49,10 @@ String String_with_capacity(Arena *arena, U32 capacity) {
 // ------------------------------------------------------ //
 void String_push(String *self, const char value) {
   if (self->len >= self->cap) {
-    fprintf(
-        stderr,
-        "Could not push to string, there is no space in string with cap %d\n",
-        self->cap);
+    fprintf(stderr,
+            "Could not push to string, there is no space in string with cap "
+            "%d\n",
+            self->cap);
     fflush(stderr);
     return;
   }
@@ -100,6 +99,35 @@ B32 String_equal(const String self, const String needle) {
 
   for (int i = 0; i < self.len; i++) {
     if (String_get(self, i) != String_get(needle, i)) {
+      return 0;
+    }
+  }
+
+  return 1;
+}
+
+// ------------------------------------------------------ //
+char StringSlice_get(const StringSlice self, const U32 index) {
+  if (index < 0 || index >= self.len) {
+    fprintf(stderr,
+            "Could not get char in StringSlice at index %d due to out of "
+            "bounds\n",
+            index);
+    fflush(stderr);
+    return 0;
+  }
+
+  return self.items[index];
+}
+
+// ------------------------------------------------------ //
+B32 StringSlice_equal(const StringSlice self, const StringSlice needle) {
+  if (self.len != needle.len) {
+    return 0;
+  }
+
+  for (int i = 0; i < self.len; i++) {
+    if (StringSlice_get(self, i) != StringSlice_get(needle, i)) {
       return 0;
     }
   }
