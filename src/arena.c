@@ -54,7 +54,7 @@ void Arena_free(Arena *arena) {
 }
 
 void *Arena_alloc(Arena *arena, U32 num_bytes) {
-  if (arena->capacity - arena->size - num_bytes < 0) {
+  if (arena->capacity < arena->size + num_bytes) {
     printf("No space in arena to alloc %d bytes\n", num_bytes);
     exit(1);
   }
