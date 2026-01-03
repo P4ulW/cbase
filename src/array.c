@@ -12,7 +12,13 @@ typedef uint32_t U32;
     type *items;                                                               \
   } Array##type;                                                               \
   void Array##type##_push(Array##type *self, type value);                      \
-  Array##type Array##type##_with_capacity(Arena *arena, const U32 capacity);
+  Array##type Array##type##_with_capacity(Arena *arena, const U32 capacity);   \
+  void Array##type##_put_value(const Array##type *self, const U32 index,       \
+                               type value);                                    \
+  type Array##type##_get_value(const Array##type *self, const U32 index);      \
+  type *Array##type##_get_ref(const Array##type *self, const U32 index);       \
+  type Array##type##_remove_at(Array##type *self, const U32 index);            \
+  type Array##type##_pop(Array##type *self);
 
 #define Array_Impl(type)                                                       \
   void Array##type##_push(Array##type *self, type value) {                     \
